@@ -87,7 +87,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
             self.classifier_ = self.classifier
         except NotFittedError:
             self.classifier_ = clone(self.classifier)
-            self.classifier_.fit(X, y != 0, sample_weight=sample_weight)
+            self.classifier_.fit(X, y != 0)
 
         non_zero_indices = np.where(self.classifier_.predict(X) == 1)[0]
 
@@ -99,8 +99,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
                 self.regressor_ = clone(self.regressor)
                 self.regressor_.fit(
                     X[non_zero_indices],
-                    y[non_zero_indices],
-                    sample_weight=sample_weight[non_zero_indices] if sample_weight is not None else None
+                    y[non_zero_indices]
                 )
         else:
             raise ValueError(
