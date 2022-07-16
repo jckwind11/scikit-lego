@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.base import BaseEstimator, RegressorMixin, clone, is_regressor, is_classifier
 from sklearn.utils.validation import check_is_fitted, check_X_y, check_array
 from sklearn.exceptions import NotFittedError
-
+from scipy.sparse.csr_matrix import todense
 
 class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
     """
@@ -74,11 +74,8 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
         ValueError
             If `classifier` is not a classifier or `regressor` is not a regressor.
         """
-        print(X.shape)
-        print(y.shape)
-        X, y = check_X_y(X, y, accept_sparse='csr')
-        print(X.shape)
-        print(y.shape)
+        X = X.todense()
+        X, y = check_X_y(X, y)
         self._check_n_features(X, reset=True)
         if not is_classifier(self.classifier):
             raise ValueError(
@@ -126,6 +123,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
             The predicted values.
         """
         check_is_fitted(self)
+        X = X.todense()
         X = check_array(X)
         self._check_n_features(X, reset=False)
 
