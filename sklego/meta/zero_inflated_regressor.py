@@ -96,8 +96,10 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
                 self.regressor_ = self.regressor
             except NotFittedError:
                 self.regressor_ = clone(self.regressor)
+                print(y)
+                print(non_zero_indices)
                 self.regressor_.fit(
-                    X[non_zero_indices],
+                    X[non_zero_indices][non_zero_indices],
                     y[non_zero_indices]
                 )
         else:
