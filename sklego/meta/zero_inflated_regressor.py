@@ -74,7 +74,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
         ValueError
             If `classifier` is not a classifier or `regressor` is not a regressor.
         """
-        X, y = check_X_y(X, y)
+        X, y = check_X_y(X, y, accept_sparse='csr')
         self._check_n_features(X, reset=True)
         if not is_classifier(self.classifier):
             raise ValueError(
