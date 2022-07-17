@@ -48,7 +48,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
         self.classifier = classifier
         self.regressor = regressor
 
-    def fit(self, X, y, sample_weight=None):
+    def fit(self, X, y, Z):
         """
         Fit the model.
 
@@ -59,6 +59,8 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
 
         y : np.ndarray, 1-dimensional
             The target values.
+        Z : np.ndarray of shape (n_samples, n_features)
+            The non-zero data.
 
         sample_weight : Optional[np.array], default=None
             Individual weights for each sample.
@@ -86,7 +88,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
             self.classifier_ = self.classifier
         except NotFittedError:
             self.classifier_ = clone(self.classifier)
-            self.classifier_.fit(X, y != 0)
+            self.classifier_.fit(z, y != 0)
 
         non_zero_indices = np.where(self.classifier_.predict(X) == 1)[0]
 
@@ -106,7 +108,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
 
         return self
 
-    def predict(self, X):
+    def predict(self, X, Z):
         """
         Get predictions.
 
@@ -114,6 +116,8 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
         ----------
         X : np.ndarray, shape (n_samples, n_features)
             Samples to get predictions of.
+        Z : np.ndarray of shape (n_samples, n_features)
+            The non-zero data.
 
         Returns
         -------
@@ -125,7 +129,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
         self._check_n_features(X, reset=False)
 
         output = np.zeros(len(X))
-        non_zero_indices = np.where(self.classifier_.predict(X))[0]
+        non_zero_indices = np.where(self.classifier_.predict(Z))[0]
 
         if non_zero_indices.size > 0:
             output[non_zero_indices] = self.regressor_.predict(X[non_zero_indices])
