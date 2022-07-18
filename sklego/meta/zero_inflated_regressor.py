@@ -91,9 +91,6 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
             self.classifier_.fit(X, y != 0)
 
         non_zero_indices = np.where(self.classifier_.predict(X) == 1)[0]
-        
-        zero_indices = np.where(self.classifier_.predict(X) == 0)[0]
-        print('fitting with :' + str(non_zero_indices) + ' length of x: ' + str(len(X)))
 
         if non_zero_indices.size > 0:
             try:
@@ -133,7 +130,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
 
         output = np.zeros(len(X))
         non_zero_indices = np.where(self.classifier_.predict(X))[0]
-        print('predicting with :' + str(non_zero_indices) + ' length of x: ' + str(len(X)))
+
         if non_zero_indices.size > 0:
             output[non_zero_indices] = self.regressor_.predict(X[non_zero_indices])
 
