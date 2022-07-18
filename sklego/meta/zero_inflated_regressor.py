@@ -83,24 +83,27 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
         if not is_regressor(self.regressor):
             raise ValueError(f"`regressor` has to be a regressor. Received instance of {type(self.regressor)} instead.")
 
+        nonzero_data = [value != 0 for value in y]
         try:
             check_is_fitted(self.classifier)
             self.classifier_ = self.classifier
         except NotFittedError:
             self.classifier_ = clone(self.classifier)
-            self.classifier_.fit(X, y != 0)
+            self.classifier_.fit(X, nonzero_data)
 
-        non_zero_indices = np.where(self.classifier_.predict(X) == 1)[0]
+        
+        nonzero_indices = np.where(nonzero_data == True)[0]
+        print(nonzero_data)
 
-        if non_zero_indices.size > 0:
+        if nonzero_indices.size > 0:
             try:
                 check_is_fitted(self.regressor)
                 self.regressor_ = self.regressor
             except NotFittedError:
                 self.regressor_ = clone(self.regressor)
                 self.regressor_.fit(
-                    X[non_zero_indices],
-                    y[non_zero_indices]
+                    X[nonzero_indices],
+                    y[nonzero_indices]
                 )
         else:
             raise ValueError(
