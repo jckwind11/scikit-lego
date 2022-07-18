@@ -93,6 +93,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
 
         
         nonzero_indices = np.where(nonzero_data == True)[0]
+        print(nonzero_indices)
         print(nonzero_data)
 
         if nonzero_indices.size > 0:
