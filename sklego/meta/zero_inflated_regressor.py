@@ -48,7 +48,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
         self.classifier = classifier
         self.regressor = regressor
 
-    def fit(self, X, y, Z):
+    def fit(self, X, y):
         """
         Fit the model.
 
@@ -88,7 +88,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
             self.classifier_ = self.classifier
         except NotFittedError:
             self.classifier_ = clone(self.classifier)
-            self.classifier_.fit(z, y != 0)
+            self.classifier_.fit(X, y != 0)
 
         non_zero_indices = np.where(self.classifier_.predict(X) == 1)[0]
 
@@ -108,7 +108,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
 
         return self
 
-    def predict(self, X, Z):
+    def predict(self, X):
         """
         Get predictions.
 
