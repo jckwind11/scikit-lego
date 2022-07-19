@@ -91,8 +91,9 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
             self.classifier_ = clone(self.classifier)
             self.classifier_.fit(X, nonzero_data)
 
-        nonzero_indices = np.where(nonzero_data == True)[0]
-        print("hey" + str(nonzero_indices))    
+        nonzero_indices = np.where(nonzero_data == True)
+        print("hey " + str(np.where(nonzero_data == True)))    
+        print("hey w" + str(nonzero_data))    
         if nonzero_indices.size > 0:
             try:
                 check_is_fitted(self.regressor)
