@@ -140,8 +140,7 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
         print(len(output))
         nonzero_indices = []
         if self.X_.shape[0] == X.shape[0] and (self.X_ == X).all():
-            nonzero_data = [i for i in range(X.shape[0])]
-            print(traceback.print_stack())
+            nonzero_indices = [i for i in range(X.shape[0])]
         else:
             nonzero_indices = np.where(self.classifier_.predict(X) == True)[0]
         
