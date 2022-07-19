@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.base import BaseEstimator, RegressorMixin, clone, is_regressor, is_classifier
 from sklearn.utils.validation import check_is_fitted, check_X_y, check_array
 from sklearn.exceptions import NotFittedError
+import traceback
 
 class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
     """
@@ -139,14 +140,8 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
         print(len(output))
         nonzero_indices = []
         if self.X_.shape[0] == X.shape[0] and (self.X_ == X).all():
-            nonzero_data = [value != 0 for value in self.y_]
-            nonzero_indices = [index for index, value in enumerate(nonzero_data) if value == True]
-            test = []
-            for index, value in enumerate(nonzero_data):
-                if value == True:
-                    test.append(index)
-            print(nonzero_indices)
-            print(test)
+            nonzero_data = [i for i in range(X.shape[0])]
+            print(traceback.print_stack())
         else:
             nonzero_indices = np.where(self.classifier_.predict(X) == True)[0]
         
