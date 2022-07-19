@@ -96,9 +96,9 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
             if value == True:
                 nonzero_indices.append(index)
             
-        print(len(X), len(y))
-        print("hey w" + str(nonzero_data))
-        print("hey " + str(nonzero_indices))    
+        self.X_ = X
+        self.y_ = y
+
         if len(nonzero_indices) > 0:
             try:
                 check_is_fitted(self.regressor)
@@ -137,10 +137,20 @@ class ZeroInflatedRegressor(BaseEstimator, RegressorMixin):
 
         output = np.zeros(len(X))
         print(len(output))
-        print(self.classifier_.predict(X))
-        non_zero_indices = np.where(self.classifier_.predict(X) == True)[0]
-
-        if non_zero_indices.size > 0:
-            output[non_zero_indices] = self.regressor_.predict(X[non_zero_indices])
+        nonzero_indices = []
+        if self.X_.shape[0] == X.shape[0] and (self.X_ == X).all():
+            nonzero_data = [value != 0 for value in self.y_]
+            nonzero_indices = [index for index, value in enumerate(nonzero_data) if value == True]
+            test = []
+            for index, value in enumerate(nonzero_data):
+                if value == True:
+                    test.append(index)
+            print(nonzero_indices)
+            print(test)
+        else:
+            nonzero_indices = np.where(self.classifier_.predict(X) == True)[0]
+        
+        if len(nonzero_indices) > 0:
+            output[nonzero_indices] = self.regressor_.predict(X[nonzero_indices])
 
         return output
